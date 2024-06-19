@@ -1,1 +1,6 @@
 npm install @reduxjs/toolkit 
+npm i axios
+npm i json-server
+
+crear db.json
+npm run api //agregar dentro del package.json
