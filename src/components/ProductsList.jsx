@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createProduct, readProducts } from "../redux/productsSlice";
+import { createProduct, readProducts, updateProduct } from "../redux/productsSlice";
 
 const ProductsList = () => {
   const products = useSelector((state) => state.products);
@@ -33,7 +33,18 @@ const ProductsList = () => {
         .catch((err) => console.error(err));
     }
   };
-  const handleUpdateProduct = () => {};
+  const handleUpdateProduct = () => {
+    if(editedProduct){
+      dispatch(
+        updateProduct({id: editedProduct.id, name: editedProduct.name})
+      );
+
+      axios.put(`http://localhost:3001/products/${editedProduct.id}`,
+        {name: editedProduct.name})
+        .then(() => setEditedProduct(null))
+        .catch((err) => console.error(err))
+    }
+  };
   const handleDeleteProduct = () => {};
 
   return (
@@ -45,13 +56,17 @@ const ProductsList = () => {
           <li key={product.id}>
             {editedProduct.id === product.id ? (
               <div>
-                <input type="text" />
-                <button>Actualizar</button>
+                <input 
+                  type="text" 
+                  value={editedProduct.name}
+                  onChange={(e) => setEditedProduct({...editedProduct, name: e.target.value})}
+                />
+                <button onClick={handleUpdateProduct}>Actualizar</button>
               </div>
             ) : (
               <div>
                 <span>{product.name}</span>
-                <button>Editar</button>
+                <button onClick={() => setEditedProduct(product)}>Editar</button>
                 <button>Eliminar</button>
               </div>
             )}
