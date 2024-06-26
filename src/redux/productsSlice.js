@@ -19,7 +19,10 @@ const productsSlice = createSlice({
                 product.name = name;
             }
         },
-        deleteProduct: (state, action) => {},
+        deleteProduct: (state, action) => {
+            const id = action.payload;
+            state.data = state.data.filter((product) => product.id !== id)
+        },
     }
 })
 

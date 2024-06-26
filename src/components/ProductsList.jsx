@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createProduct, readProducts, updateProduct } from "../redux/productsSlice";
+import { createProduct, deleteProduct, readProducts, updateProduct } from "../redux/productsSlice";
 
 const ProductsList = () => {
   const products = useSelector((state) => state.products);
@@ -45,7 +45,13 @@ const ProductsList = () => {
         .catch((err) => console.error(err))
     }
   };
-  const handleDeleteProduct = () => {};
+  const handleDeleteProduct = (id) => {
+    dispatch(deleteProduct(id));
+
+    axios
+      .delete(`http://localhost:3001/products/${id}`)
+      .catch(err => console.error(err));
+  };
 
   return (
     <>
@@ -54,7 +60,7 @@ const ProductsList = () => {
       <ul>
         {products.data.map((product) => (
           <li key={product.id}>
-            {editedProduct.id === product.id ? (
+            {editedProduct?.id === product.id ? (
               <div>
                 <input 
                   type="text" 
@@ -67,7 +73,7 @@ const ProductsList = () => {
               <div>
                 <span>{product.name}</span>
                 <button onClick={() => setEditedProduct(product)}>Editar</button>
-                <button>Eliminar</button>
+                <button onClick={() => handleDeleteProduct(product.id)}>Eliminar</button>
               </div>
             )}
           </li>
